@@ -1,0 +1,20 @@
+next-version: 1.0
+assembly-versioning-scheme: MajorMinorPatch
+assembly-file-versioning-scheme: MajorMinorPatch
+branches:
+  main:
+    regex: ^master$|^main$
+    mode: ContinuousDelivery
+    tag: ''
+    increment: Patch
+    tracks-release-branches: false
+    is-release-branch: false
+    is-mainline: true
+  develop:
+    regex: ^dev(elop)?(ment)?$
+    mode: ContinuousDeployment
+    tag: alpha
+    increment: Minor
+    tracks-release-branches: true
+    is-release-branch: false
+    is-mainline: false

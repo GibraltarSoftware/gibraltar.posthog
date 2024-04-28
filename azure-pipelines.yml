@@ -1,6 +1,6 @@
-name: $(major).$(minor).$(revision)$(Rev:.r)
 trigger:
 - main
+- develop
 
 variables:
   agentSolution: 'Gibraltar.PostHog.sln'
@@ -17,6 +17,17 @@ jobs:
     vmImage: 'windows-latest'
 
   steps:
+  - task: gitversion/setup@0
+    displayName: Setup GitVersion
+    inputs:
+      versionSpec: '5.x'
+
+  - task: gitversion/execute@0
+    displayName: Determine Version
+    inputs:
+      useConfigFile: True
+      configFilePath: './GitVersion.yaml'
+
   - task: DownloadSecureFile@1
     name: loupeAgentSigningKey
     inputs:
@@ -39,7 +50,7 @@ jobs:
       solution: '$(agentSolution)'
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
-      msbuildArgs: '/p:CustomVersion=$(fileVersion) /p:CustomInformationalVersion=$(fileVersion) /p:PackageVersion=$(fileVersion)'
+      msbuildArgs: '/p:CustomVersion=$(GitVersion.MajorMinorPatch) /p:CustomInformationalVersion=$(GitVersion.MajorMinorPatch) /p:PackageVersion=$(GitVersion.NuGetVersion)'
 
   - task: CopyFiles@2
     inputs:
