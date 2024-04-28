@@ -17,6 +17,7 @@ jobs:
   pool:
     vmImage: 'windows-latest'
 
+  steps:
   - task: DownloadSecureFile@1
     name: loupeAgentSigningKey
     inputs:
