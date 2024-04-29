@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Title>PostHog Data Capture API</Title>
     <Authors>Gibraltar Software, Inc.</Authors>
     <Description>Record events to PostHog from your server-side code using this package</Description>

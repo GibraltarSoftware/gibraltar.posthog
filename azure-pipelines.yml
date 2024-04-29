@@ -41,7 +41,7 @@ jobs:
     displayName: 'Pack'
     inputs:
       command: 'pack'
-      packagesToPack: 'Gibraltar.PostHog/Gibraltar.PostHog.csproj'
+      packagesToPack: 'src/Gibraltar.PostHog/Gibraltar.PostHog.csproj'
       versioningScheme: 'byEnvVar'
       versionEnvVar: 'Build.BuildNumber'
       arguments: '--output $(Build.ArtifactStagingDirectory)/packages'
