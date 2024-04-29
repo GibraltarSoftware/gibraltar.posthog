@@ -28,7 +28,7 @@ namespace Gibraltar.PostHog
             properties["$group_type"] = groupType;
             properties["$group_key"] = groupKey;
 
-            api.Capture("$identify", userKey, properties);
+            api.Capture("$groupidentify", userKey, properties);
         }
 
         /// <summary>
