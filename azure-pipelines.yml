@@ -27,16 +27,19 @@ jobs:
   - task: DotNetCoreCLI@2
     inputs:
       command: 'restore'
+      configuration: '$(buildConfiguration)'
       projects: '**/*.sln'
 
   - task: DotNetCoreCLI@2
     inputs:
       command: 'build'
+      configuration: '$(buildConfiguration)'
       projects: '**/*.sln'
    
   - task: DotNetCoreCLI@2
     inputs:
       command: 'pack'
+      configuration: '$(buildConfiguration)'
       includesymbols: true
       packagesToPack: 'src/Gibraltar.PostHog/Gibraltar.PostHog.csproj'
       packDirectory: '$(Build.ArtifactStagingDirectory)/packages'
