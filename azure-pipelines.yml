@@ -29,22 +29,22 @@ jobs:
   - task: NuGetCommand@2
     inputs:
       restoreSolution: '$(agentSolution)'
-
-  - task: VSBuild@1
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Build'
     inputs:
-      solution: '$(agentSolution)'
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
-      msbuildArgs: '/p:CustomVersion=$(fileVersion) /p:CustomInformationalVersion=$(fileVersion) /p:PackageVersion=$(fileVersion)'
-
-  - task: CopyFiles@2
+      command: 'build'
+      projects: '**/*.sln'
+      arguments: '--configuration $(buildConfiguration)'
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Pack'
     inputs:
-      sourceFolder: '$(Build.SourcesDirectory)/src'
-      contents: |
-        '**/*.nupkg'
-        '**/*.snupkg'
-      flattenFolders: true
-      targetFolder: '$(Build.ArtifactStagingDirectory)/packages'
+      command: 'pack'
+      packagesToPack: 'Gibraltar.PostHog/Gibraltar.PostHog.csproj'
+      versioningScheme: 'byEnvVar'
+      versionEnvVar: 'Build.BuildNumber'
+      arguments: '--output $(Build.ArtifactStagingDirectory)/packages'
 
   - task: NuGetCommand@2
     displayName: 'Sign NuGet Packages'  
