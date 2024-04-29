@@ -41,12 +41,11 @@ jobs:
     inputs:
       restoreSolution: '$(agentSolution)'
 
-  - task: VSBuild@1
+  - task: DotNetCoreCLI@2
     inputs:
-      solution: '$(agentSolution)'
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
-      msbuildArgs: '/p:Version=$(fileVersion) /p:InformationalVersion=$(fileVersion) /p:PackageVersion=$(packageVersion)'
+      command: 'build'
+      projects: '**/*.csproj'
+      arguments: '--configuration $(buildConfiguration) --version-suffix $(Build.BuildNumber)'
 
   - task: CopyFiles@2
     inputs:
