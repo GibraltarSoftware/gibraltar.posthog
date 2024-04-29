@@ -24,19 +24,21 @@ jobs:
     inputs:
       secureFile: 'GibraltarSoftwareCCC.pfx'
 
-  - task: NuGetToolInstaller@1
-
-  - task: NuGetCommand@2
+  - task: DotNetCoreCLI@2
     inputs:
-      restoreSolution: '$(agentSolution)'
+      command: 'restore'
+      projects: '**/*.sln'
 
-  - task: VSBuild@1
+  - task: DotNetCoreCLI@2
     inputs:
-      solution: '$(solutionFile)'
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
-      restoreNugetPackages: true
-      msbuildArgs: '/p:CustomVersion=$(fileVersion) /p:CustomInformationalVersion=$(fileVersion) /p:PackageVersion=$(fileVersion)'
+      command: 'build'
+      projects: '**/*.sln'
+      arguments: '--configuration $(buildConfiguration) --version-suffix $(Build.BuildNumber)'
+   
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'pack'
+      packagesToPack: '**/*.csproj'
 
   - task: CopyFiles@2
     inputs:
