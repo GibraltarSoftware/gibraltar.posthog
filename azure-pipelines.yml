@@ -32,14 +32,11 @@ jobs:
   - task: DotNetCoreCLI@2
     inputs:
       command: 'build'
-      configuration: '$(buildConfiguration)'
       projects: '**/*.sln'
-      arguments: '--configuration $(buildConfiguration) --version-suffix $(Build.BuildNumber)'
    
   - task: DotNetCoreCLI@2
     inputs:
       command: 'pack'
-      configuration: '$(buildConfiguration)'
       includesymbols: true
       packagesToPack: 'src/Gibraltar.PostHog/Gibraltar.PostHog.csproj'
       packDirectory: '$(Build.ArtifactStagingDirectory)/packages'
