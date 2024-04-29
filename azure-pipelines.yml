@@ -32,22 +32,18 @@ jobs:
   - task: DotNetCoreCLI@2
     inputs:
       command: 'build'
+      configuration: '$(buildConfiguration)'
       projects: '**/*.sln'
       arguments: '--configuration $(buildConfiguration) --version-suffix $(Build.BuildNumber)'
    
   - task: DotNetCoreCLI@2
     inputs:
       command: 'pack'
-      packagesToPack: '**/*.csproj'
-
-  - task: CopyFiles@2
-    inputs:
-      sourceFolder: '$(Build.SourcesDirectory)/src'
-      contents: |
-        '**/*.nupkg'
-        '**/*.snupkg'
-      flattenFolders: true
-      targetFolder: '$(Build.ArtifactStagingDirectory)/packages'
+      configuration: '$(buildConfiguration)'
+      includesymbols: true
+      packagesToPack: 'src/Gibraltar.PostHog/Gibraltar.PostHog.csproj'
+      packDirectory: '$(Build.ArtifactStagingDirectory)/packages'
+      verbosityPack: 'Minimal'
 
   - task: NuGetCommand@2
     displayName: 'Sign NuGet Packages'  
