@@ -4,7 +4,7 @@ trigger:
 - develop
 
 variables:
-  agentSolution: 'Gibraltar.PostHog.sln'
+  solutionFile: 'Gibraltar.PostHog.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   group: code-signing
@@ -29,22 +29,22 @@ jobs:
   - task: NuGetCommand@2
     inputs:
       restoreSolution: '$(agentSolution)'
-  
-  - task: DotNetCoreCLI@2
-    displayName: 'Build'
+
+  - task: VSBuild@1
     inputs:
-      command: 'build'
-      configuration: $(BuildConfiguration)
-      projects: '**/*.sln'
-  
-  - task: DotNetCoreCLI@2
-    displayName: 'Pack'
+      solution: '$(solutionFile)'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      msbuildArgs: '/p:CustomVersion=$(fileVersion) /p:CustomInformationalVersion=$(fileVersion) /p:PackageVersion=$(fileVersion)'
+
+  - task: CopyFiles@2
     inputs:
-      command: 'pack'
-      configuration: '$(BuildConfiguration)'
-      packagesToPack: 'src/Gibraltar.PostHog/Gibraltar.PostHog.csproj'
-      packDirectory: '$(Build.ArtifactStagingDirectory)/packages'
-      versioningScheme: byBuildNumber
+      sourceFolder: '$(Build.SourcesDirectory)/src'
+      contents: |
+        '**/*.nupkg'
+        '**/*.snupkg'
+      flattenFolders: true
+      targetFolder: '$(Build.ArtifactStagingDirectory)/packages'
 
   - task: NuGetCommand@2
     displayName: 'Sign NuGet Packages'  
