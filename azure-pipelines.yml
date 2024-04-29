@@ -25,18 +25,14 @@ jobs:
       secureFile: 'GibraltarSoftwareCCC.pfx'
 
   - task: DotNetCoreCLI@2
-    inputs:
-      command: 'restore'
-      configuration: '$(buildConfiguration)'
-      projects: '**/*.sln'
-
-  - task: DotNetCoreCLI@2
+    displayName: 'Build Solution'
     inputs:
       command: 'build'
-      configuration: '$(buildConfiguration)'
+      arguments: '--configuration $(buildConfiguration)'
       projects: '**/*.sln'
    
   - task: DotNetCoreCLI@2
+    displayName: 'Pack NuGet Packages'
     inputs:
       command: 'pack'
       configuration: '$(buildConfiguration)'
