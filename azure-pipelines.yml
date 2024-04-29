@@ -10,9 +10,8 @@ variables:
   group: code-signing
   major: 1
   minor: 0
-  revision: 1
+  revision: 0
   fileVersion: '$(Build.BuildNumber)'
-  packageVersion: '$(major).$(minor).$(revision)'
 
 jobs:
 - job: build
@@ -31,17 +30,19 @@ jobs:
     inputs:
       restoreSolution: '$(agentSolution)'
 
-  - task: DotNetCoreCLI@2
+  - task: VSBuild@1
     inputs:
-      command: 'build'
-      projects: '**/*.csproj'
-      versioningScheme: 'byBuildNumber'
-      arguments: '--configuration $(buildConfiguration)'
+      solution: '$(agentSolution)'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      msbuildArgs: '/p:CustomVersion=$(fileVersion) /p:CustomInformationalVersion=$(fileVersion) /p:PackageVersion=$(fileVersion)'
 
   - task: CopyFiles@2
     inputs:
       sourceFolder: '$(Build.SourcesDirectory)/src'
-      contents: '**\?(*.nupkg|*.snupkg)'
+      contents: |
+        '**/*.nupkg'
+        '**/*.snupkg'
       flattenFolders: true
       targetFolder: '$(Build.ArtifactStagingDirectory)/packages'
 
