@@ -35,6 +35,7 @@ jobs:
       solution: '$(solutionFile)'
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
+      restoreNugetPackages: true
       msbuildArgs: '/p:CustomVersion=$(fileVersion) /p:CustomInformationalVersion=$(fileVersion) /p:PackageVersion=$(fileVersion)'
 
   - task: CopyFiles@2
