@@ -10,8 +10,9 @@ variables:
   group: code-signing
   major: 1
   minor: 0
-  revision: 0
+  revision: 1
   fileVersion: '$(Build.BuildNumber)'
+  packageVersion: '$(major).$(minor).$(revision)'
 
 jobs:
 - job: build
@@ -35,7 +36,7 @@ jobs:
       solution: '$(agentSolution)'
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
-      msbuildArgs: '/p:CustomVersion=$(fileVersion) /p:CustomInformationalVersion=$(fileVersion) /p:PackageVersion=$(fileVersion)'
+      msbuildArgs: '/p:CustomVersion=$(fileVersion) /p:CustomInformationalVersion=$(fileVersion) /p:PackageVersion=$(packageVersion)'
 
   - task: CopyFiles@2
     inputs:
