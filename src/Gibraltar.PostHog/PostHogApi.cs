@@ -22,13 +22,18 @@ namespace Gibraltar.PostHog
         private readonly ILogger<PostHogApi> _logger;
         private readonly HttpClient _client;
         private readonly BlockingCollection<EventModel> _eventQueue;
-
         private readonly CancellationTokenSource? _cancellationTokenSource;
+        private readonly string _libraryVersion;
 
         /// <summary>
         /// The default capture URL, pointing to the US PostHog servers.
         /// </summary>
         public const string DefaultCaptureUrl = "https://app.posthog.com/capture/";
+
+        /// <summary>
+        /// The library identifier sent to PostHog.
+        /// </summary>
+        public const string LibraryIdentifier = "net-gibraltar";
 
         /// <summary>
         /// Create the PostHogApi client
@@ -60,6 +65,15 @@ namespace Gibraltar.PostHog
             {
                 Enabled = false;
             }
+
+            try 
+            {
+                _libraryVersion = GetType().Assembly.GetName().Version?.ToString() ?? "0.0.0";
+            }
+            catch (Exception)
+            {
+                // We don't want this to fail the constructor, so we'll just eat any exceptions.
+            }
         }
 
         /// <summary>
@@ -85,6 +99,9 @@ namespace Gibraltar.PostHog
                 Timestamp = DateTimeOffset.UtcNow,
                 Properties = properties ?? new Dictionary<string, object>()
             };
+
+            eventDetails.Properties["$lib"] = LibraryIdentifier;
+            eventDetails.Properties["$lib_version"] = _libraryVersion;
 
             _eventQueue.Add(eventDetails);
         }
